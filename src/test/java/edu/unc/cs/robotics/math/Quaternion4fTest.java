@@ -1,3 +1,4 @@
+// Automatically generated from Quaternion4dTest.java, DO NOT EDIT!
 package edu.unc.cs.robotics.math;
 
 import java.util.Random;
@@ -7,27 +8,27 @@ import junit.framework.TestCase;
 /**
  * Created by jeffi on 11/4/16.
  */
-public class Quaternion4dTest extends TestCase {
-    static final double EPSILON = 1e-9;
+public class Quaternion4fTest extends TestCase {
+    static final float EPSILON = 1e-6f;
 
-    private static void assertQuaternion(Quaternion4d actual, double ... expected) {
+    private static void assertQuaternion(Quaternion4f actual, float ... expected) {
         boolean posEq = true;
         boolean negEq = true;
-        double sum = 0;
+        float sum = 0;
         for (int i=0 ; i<4 ; ++i) {
-            double v = actual.getCoeff(i);
+            float v = actual.getCoeff(i);
             posEq &= Math.abs(expected[i] - v) < EPSILON;
             negEq &= Math.abs(expected[i] + v) < EPSILON;
             sum += v*v;
         }
         if (!posEq && !negEq) {
-            failNotEquals("", new Quaternion4d(expected), actual);
+            failNotEquals("", new Quaternion4f(expected), actual);
         }
-        assertEquals(1.0, sum, EPSILON);
+        assertEquals(1.0f, sum, EPSILON);
     }
 
     public void testCreateIdentity() throws Exception {
-        final Quaternion4d q = new Quaternion4d();
+        final Quaternion4f q = new Quaternion4f();
         assertEquals(1f, q.w, 0);
         assertEquals(0f, q.x, 0);
         assertEquals(0f, q.y, 0);
@@ -35,7 +36,7 @@ public class Quaternion4dTest extends TestCase {
     }
 
     public void testSetIdentity() throws Exception {
-        Quaternion4d q = new Quaternion4d(2,3,4,5);
+        Quaternion4f q = new Quaternion4f(2,3,4,5);
         q.setIdentity();
         assertEquals(1f, q.w, 0);
         assertEquals(0f, q.x, 0);
@@ -44,7 +45,7 @@ public class Quaternion4dTest extends TestCase {
     }
 
     public void testFromMatrix_identity() throws Exception {
-        Quaternion4d q = new Quaternion4d(2, 3, 4, 5);
+        Quaternion4f q = new Quaternion4f(2, 3, 4, 5);
         q.fromRotation(
             1, 0, 0,
             0, 1, 0,
@@ -56,63 +57,63 @@ public class Quaternion4dTest extends TestCase {
     }
 
     public void testFromMatrix_90x() throws Exception {
-        Quaternion4d q = new Quaternion4d(2, 3, 4, 5);
-        Matrix3d m = new Matrix3d();
-        m.rotateX(m, Math.PI/2);
+        Quaternion4f q = new Quaternion4f(2, 3, 4, 5);
+        Matrix3f m = new Matrix3f();
+        m.rotateX(m, (float)Math.PI/2);
         q.fromMatrix(m);
-        assertEquals(Math.sqrt(0.5), q.w, EPSILON);
-        assertEquals(Math.sqrt(0.5), q.x, EPSILON);
+        assertEquals((float)Math.sqrt(0.5f), q.w, EPSILON);
+        assertEquals((float)Math.sqrt(0.5f), q.x, EPSILON);
         assertEquals(0, q.y, 0);
         assertEquals(0, q.z, 0);
     }
 
     public void testFromMatrix_90y() throws Exception {
-        Quaternion4d q = new Quaternion4d(2, 3, 4, 5);
-        Matrix3d m = new Matrix3d();
-        m.rotateY(m, Math.PI/2);
+        Quaternion4f q = new Quaternion4f(2, 3, 4, 5);
+        Matrix3f m = new Matrix3f();
+        m.rotateY(m, (float)Math.PI/2);
         q.fromMatrix(m);
-        assertEquals(Math.sqrt(0.5), q.w, EPSILON);
+        assertEquals((float)Math.sqrt(0.5f), q.w, EPSILON);
         assertEquals(0, q.x, 0);
-        assertEquals(Math.sqrt(0.5), q.y, EPSILON);
+        assertEquals((float)Math.sqrt(0.5f), q.y, EPSILON);
         assertEquals(0, q.z, 0);
     }
 
     public void testFromMatrix_90z() throws Exception {
-        Quaternion4d q = new Quaternion4d(2,3,4,5);
-        Matrix3d m = new Matrix3d();
-        m.rotateZ(m, Math.PI/2);
+        Quaternion4f q = new Quaternion4f(2,3,4,5);
+        Matrix3f m = new Matrix3f();
+        m.rotateZ(m, (float)Math.PI/2);
         q.fromMatrix(m);
-        assertEquals(Math.sqrt(0.5), q.w, EPSILON);
+        assertEquals((float)Math.sqrt(0.5f), q.w, EPSILON);
         assertEquals(0, q.x, 0);
         assertEquals(0, q.y, 0);
-        assertEquals(Math.sqrt(0.5), q.z, EPSILON);
+        assertEquals((float)Math.sqrt(0.5f), q.z, EPSILON);
     }
 
     public void testFromAxisAngle_90x() throws Exception {
-        Quaternion4d q = new Quaternion4d(2,3,4,5);
-        q.fromAxisAngle(1, 0, 0, (double)(Math.PI / 2));
-        assertEquals( (double)Math.sqrt(0.5), q.w, EPSILON);
-        assertEquals( (double)Math.sqrt(0.5), q.x, EPSILON);
+        Quaternion4f q = new Quaternion4f(2,3,4,5);
+        q.fromAxisAngle(1, 0, 0, (float)((float)Math.PI / 2));
+        assertEquals( (float)(float)Math.sqrt(0.5f), q.w, EPSILON);
+        assertEquals( (float)(float)Math.sqrt(0.5f), q.x, EPSILON);
         assertEquals( 0f, q.y, EPSILON);
         assertEquals( 0f, q.z, EPSILON);
     }
 
     public void testFromAxisAngle_90y() throws Exception {
-        Quaternion4d q = new Quaternion4d(2,3,4,5);
-        q.fromAxisAngle(0, 1, 0, (double)(Math.PI / 2));
-        assertEquals( (double)Math.sqrt(0.5), q.w, EPSILON);
+        Quaternion4f q = new Quaternion4f(2,3,4,5);
+        q.fromAxisAngle(0, 1, 0, (float)((float)Math.PI / 2));
+        assertEquals( (float)(float)Math.sqrt(0.5f), q.w, EPSILON);
         assertEquals( 0f, q.x, EPSILON);
-        assertEquals( (double)Math.sqrt(0.5), q.y, EPSILON);
+        assertEquals( (float)(float)Math.sqrt(0.5f), q.y, EPSILON);
         assertEquals( 0f, q.z, EPSILON);
     }
 
     public void testFromAxisAngle_90z() throws Exception {
-        Quaternion4d q = new Quaternion4d(2,3,4,5);
-        q.fromAxisAngle(0, 0, 1, (double)(Math.PI / 2));
-        assertEquals( (double)Math.sqrt(0.5), q.w, EPSILON);
+        Quaternion4f q = new Quaternion4f(2,3,4,5);
+        q.fromAxisAngle(0, 0, 1, (float)((float)Math.PI / 2));
+        assertEquals( (float)(float)Math.sqrt(0.5f), q.w, EPSILON);
         assertEquals( 0, q.x, EPSILON);
         assertEquals( 0, q.y, EPSILON);
-        assertEquals( (double)Math.sqrt(0.5), q.z, EPSILON);
+        assertEquals( (float)(float)Math.sqrt(0.5f), q.z, EPSILON);
     }
 
 //    public void testDot() throws Exception {
@@ -132,10 +133,10 @@ public class Quaternion4dTest extends TestCase {
 //    }
 
     public void testTransform_identity() throws Exception {
-        Quaternion4d q = new Quaternion4d();
-        Vec3d r = new Vec3d();
-        double d = Math.sqrt(1 + 2*2 + 3*3);
-        r.transform(q, new Vec3d(1/d,2/d,3/d));
+        Quaternion4f q = new Quaternion4f();
+        Vec3f r = new Vec3f();
+        float d = (float)Math.sqrt(1 + 2*2 + 3*3);
+        r.transform(q, new Vec3f(1/d,2/d,3/d));
         assertEquals(1/d, r.x, EPSILON);
         assertEquals(2/d, r.y, EPSILON);
         assertEquals(3/d, r.z, EPSILON);
@@ -143,9 +144,9 @@ public class Quaternion4dTest extends TestCase {
 
     public void testTransform_90x() throws Exception {
         // rotation around x axis by 90 degrees
-        Quaternion4d q = new Quaternion4d((double)Math.sqrt(0.5), (double)-Math.sqrt(0.5), 0, 0);
-        Vec3d r = new Vec3d();
-        r.transform(q, new Vec3d(0,0,1));
+        Quaternion4f q = new Quaternion4f((float)(float)Math.sqrt(0.5f), (float)-(float)Math.sqrt(0.5f), 0, 0);
+        Vec3f r = new Vec3f();
+        r.transform(q, new Vec3f(0,0,1));
         assertEquals(0, r.x, EPSILON);
         assertEquals(1, r.y, EPSILON);
         assertEquals(0, r.z, EPSILON);
@@ -173,41 +174,41 @@ public class Quaternion4dTest extends TestCase {
     public void testRandom() throws Exception {
         final int N = 1000;
         Random rand = new Random(1);
-        Quaternion4d q = new Quaternion4d();
-        Quaternion4d p = new Quaternion4d();
+        Quaternion4f q = new Quaternion4f();
+        Quaternion4f p = new Quaternion4f();
         for (int i=0 ; i<N ; ++i) {
             q.random(rand);
             // the result should be normalized
-            assertEquals(1.0, q.dot(q), EPSILON);
+            assertEquals(1.0f, q.dot(q), EPSILON);
             // the result should be different than the previoud
-            assertTrue(Quaternion4d.arcLength(q, p) > EPSILON);
-            Quaternion4d t = p; p = q; q = t;
+            assertTrue(Quaternion4f.arcLength(q, p) > EPSILON);
+            Quaternion4f t = p; p = q; q = t;
         }
     }
 
     public void testFromMatrix() {
-        Quaternion4d q = new Quaternion4d(2,3,4,5);
-        Matrix3d m = new Matrix3d();
+        Quaternion4f q = new Quaternion4f(2,3,4,5);
+        Matrix3f m = new Matrix3f();
         q.fromMatrix(m);
         assertQuaternion(q, 1, 0, 0, 0);
 
-        m.rotate(m, 1, 0, 0, Math.PI/6);
+        m.rotate(m, 1, 0, 0, (float)Math.PI/6);
         q.fromMatrix(m);
         assertQuaternion(q,
-            Math.cos(Math.PI/6/2),
-            Math.sin(Math.PI/6/2), 0, 0);
-        Matrix3d n = new Matrix3d();
+            (float)Math.cos((float)Math.PI/6/2),
+            (float)Math.sin((float)Math.PI/6/2), 0, 0);
+        Matrix3f n = new Matrix3f();
         n.fromQuaternion(q);
-        Matrix3dTest.assertRotation(n,
+        Matrix3fTest.assertRotation(n,
             m.m00, m.m01, m.m02,
             m.m10, m.m11, m.m12,
             m.m20, m.m21, m.m22);
     }
 
     public void testQuaternionToFromMatrix() {
-        Quaternion4d q = new Quaternion4d();
-        Matrix3d m = new Matrix3d();
-        Quaternion4d p = new Quaternion4d();
+        Quaternion4f q = new Quaternion4f();
+        Matrix3f m = new Matrix3f();
+        Quaternion4f p = new Quaternion4f();
         Random random = new Random(1);
         final int N = 1000;
         for (int i=0 ; i<N ; ++i) {
@@ -219,7 +220,7 @@ public class Quaternion4dTest extends TestCase {
     }
 
     public void testEuler() {
-        Quaternion4d q = new Quaternion4d();
+        Quaternion4f q = new Quaternion4f();
         q.fromRPY(0, 0, 0);
         assertQuaternion(
             q,
@@ -228,37 +229,37 @@ public class Quaternion4dTest extends TestCase {
             0,
             0);
 
-        q.fromRPY(Math.PI / 6, 0, 0);
+        q.fromRPY((float)Math.PI / 6, 0, 0);
         assertQuaternion(
             q,
-            Math.cos(Math.PI / 12),
-            Math.sin(Math.PI / 12),
+            (float)Math.cos((float)Math.PI / 12),
+            (float)Math.sin((float)Math.PI / 12),
             0,
             0);
 
-        q.fromRPY(0, Math.PI / 6, 0);
+        q.fromRPY(0, (float)Math.PI / 6, 0);
         assertQuaternion(
             q,
-            Math.cos(Math.PI / 12),
+            (float)Math.cos((float)Math.PI / 12),
             0,
-            Math.sin(Math.PI / 12),
+            (float)Math.sin((float)Math.PI / 12),
             0);
 
-        q.fromRPY(0, 0, (double)(Math.PI / 6));
+        q.fromRPY(0, 0, (float)((float)Math.PI / 6));
         assertQuaternion(
             q,
-            (double)Math.cos(Math.PI / 12),
+            (float)(float)Math.cos((float)Math.PI / 12),
             0,
             0,
-            (double)Math.sin(Math.PI / 12));
+            (float)(float)Math.sin((float)Math.PI / 12));
 
-//        Quaternion4d a = new Quaternion4d();
+//        Quaternion4f a = new Quaternion4f();
 //        final int N = 1000;
 //        final Random random = new Random(1);
 //        for (int i = 0; i < N; ++i) {
-//            double roll = (random.nextdouble() - 0.5f) * (double)(2*Math.PI);
-//            double pitch = (random.nextdouble() - 0.5f) * (double)(2*Math.PI);
-//            double yaw = (random.nextdouble() - 0.5f) * (double)(2*Math.PI);
+//            float roll = (random.nextfloat() - 0.5ff) * (float)(2*(float)Math.PI);
+//            float pitch = (random.nextfloat() - 0.5ff) * (float)(2*(float)Math.PI);
+//            float yaw = (random.nextfloat() - 0.5ff) * (float)(2*(float)Math.PI);
 //
 //            q.fromRPY(roll, pitch, yaw);
 //            a.fromRPYAlt(roll, pitch, yaw);
@@ -270,14 +271,14 @@ public class Quaternion4dTest extends TestCase {
 //    public void testBenchmark() throws Exception {
 //        final int WARMUP_CYCLES = 10;
 //        int n = 10000;
-//        Quaternion4d q = new double[4];
+//        Quaternion4f q = new float[4];
 //        Random random = new Random(1);
-//        ReferenceQueue<Quaternion4d> refQueue = new ReferenceQueue<>();
+//        ReferenceQueue<Quaternion4f> refQueue = new ReferenceQueue<>();
 //        for (int cycle=0 ;; ++cycle) {
-//            Quaternion4d input = new double[n * 3];
+//            Quaternion4f input = new float[n * 3];
 //            random.setSeed(1);
 //            for (int i = 0; i < n*3; ++i) {
-//                input[i] = 2 * Math.PI * (random.nextdouble() - 0.5);
+//                input[i] = 2 * (float)Math.PI * (random.nextfloat() - 0.5f);
 //            }
 //
 //            final long timerStart = System.nanoTime();
@@ -290,25 +291,25 @@ public class Quaternion4dTest extends TestCase {
 //                continue;
 //            }
 //            if (timerEnd - timerStart < 100_000_000) {
-//                n = (int)(n * 150_000_000L / (timerEnd - timerStart));
+//                n = (n * 150_000_000L / (timerEnd - timerStart));
 //                System.out.ln("Setting N = "+n);
 //            } else {
 //                System.out.printf("Quaternion.fromRPY    %.0f ns%n",
-//                    (timerLap - timerStart) / (double)n);
+//                    (timerLap - timerStart) / (float)n);
 //                System.out.printf("Quaternion.fromRPYAlt %.0f ns%n",
-//                    (timerEnd - timerLap) / (double)n);
+//                    (timerEnd - timerLap) / (float)n);
 //                break;
 //            }
 //        }
 //    }
 //
-//    private void benchmarkFromRPYAlt(int n, Quaternion4d q, Quaternion4d input) {
+//    private void benchmarkFromRPYAlt(int n, Quaternion4f q, Quaternion4f input) {
 //        for (int i = 0; i< n *3 ; i+=3) {
 //            Quaternion.fromRPYAlt(q, input[i], input[i+1], input[i+2]);
 //        }
 //    }
 //
-//    private void benchmarkFromRPY(int n, Quaternion4d q, Quaternion4d input) {
+//    private void benchmarkFromRPY(int n, Quaternion4f q, Quaternion4f input) {
 //        for (int i = 0; i< n *3 ; i+=3) {
 //            Quaternion.fromRPY(q, input[i], input[i+1], input[i+2]);
 //        }
@@ -316,11 +317,11 @@ public class Quaternion4dTest extends TestCase {
 
 //    public void testTransform() {
 //        Random random = new Random(1);
-//        Quaternion4d q = new Quaternion4d();
-//        double[] m = new double[9];
-//        double[] v = new double[3];
-//        double[] vq = new double[3];
-//        double[] vm = new double[3];
+//        Quaternion4f q = new Quaternion4f();
+//        float[] m = new float[9];
+//        float[] v = new float[3];
+//        float[] vq = new float[3];
+//        float[] vm = new float[3];
 //        final int N = 10000;
 //        final int M = 1000;
 //        for (int i=0 ; i<N ; ++i) {
@@ -328,7 +329,7 @@ public class Quaternion4dTest extends TestCase {
 //            Matrix3.fromQuaternion(m, q);
 //            for (int j=0 ; j<M ; ++j) {
 //                for (int k=0 ; k<3 ; ++k)
-//                    v[k] = random.nextdouble() - 0.5;
+//                    v[k] = random.nextfloat() - 0.5f;
 //                Matrix3.transform(vm, m, v);
 //                Quaternion.transform(vq, q, v);
 //
@@ -340,11 +341,11 @@ public class Quaternion4dTest extends TestCase {
 
 //    public void testBenchmarkTransform() {
 //        Random random = new Random(1);
-//        Quaternion4d q = new double[4];
-//        double[] r = new double[3];
+//        Quaternion4f q = new float[4];
+//        float[] r = new float[3];
 //
 //        Quaternion.random(q, random);
-//        double[] v = random.doubles().limit(3).toArray();
+//        float[] v = random.floats().limit(3).toArray();
 //        final int N = 10_000_000;
 //
 //        for (int run=0 ; run<10 ; ++run) {
@@ -355,21 +356,21 @@ public class Quaternion4dTest extends TestCase {
 //            final long timerEnd = System.nanoTime();
 //            System.out.printf(
 //                "Quaternion transform: %.2f ns%n",
-//                (timerEnd - timerStart) / (double) N);
+//                (timerEnd - timerStart) / (float) N);
 //        }
 //    }
 
 
 //    public void testMul() throws Exception {
-//        double[] a = new double[4];
-//        double[] b = new double[4];
-//        double[] q = new double[4];
+//        float[] a = new float[4];
+//        float[] b = new float[4];
+//        float[] q = new float[4];
 //        Random random = new Random();
 //        Quaternion.random(a, random);
 //        Quaternion.random(b, random);
 //        Quaternion.mul(q, a, b);
-//        final double[] m = Matrix3.identity();
-//        final double[] n = Matrix3.identity();
+//        final float[] m = Matrix3.identity();
+//        final float[] n = Matrix3.identity();
 //        Matrix3.fromQuaternion(m, a);
 //        Matrix3.fromQuaternion(n, b);
 //        Matrix3.mul(m, m, n);

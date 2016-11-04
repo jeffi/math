@@ -6,6 +6,8 @@ import junit.framework.TestCase;
  * Created by jeffi on 11/4/16.
  */
 public class Vec3dTest extends TestCase {
+    
+    static final double EPSILON = 1e-9;
 
     private static void assertVec3d(Vec3d n, double x, double y, double z, double delta) {
         assertEquals(x, n.x, delta);
@@ -94,7 +96,7 @@ public class Vec3dTest extends TestCase {
         Vec3d n = new Vec3d(3e+30, 5e+30, 7e+30);
         assertTrue(n.normalize());
         double d = Math.sqrt(3*3 + 5*5 + 7*7);
-        assertVec3d(n, 3/d, 5/d, 7/d, 1e-7f);
+        assertVec3d(n, 3/d, 5/d, 7/d, 1e-7);
     }
 
     public void testTransform() throws Exception {
@@ -105,7 +107,7 @@ public class Vec3dTest extends TestCase {
         Vec3d r = new Vec3d();
 
         r.transform(t, v);
-        assertVec3d(r, 2+7, 3-13, 5+11, 1e-9);
+        assertVec3d(r, 2+7, 3-13, 5+11, EPSILON);
         assertVec3d(v, 7, 11, 13, 0);
     }
 
@@ -116,8 +118,8 @@ public class Vec3dTest extends TestCase {
         Vec3d v = new Vec3d(2+7, 3-13, 5+11);
         Vec3d r = new Vec3d();
         r.inverseTransform(t, v);
-        assertVec3d(r, 7, 11, 13, 1e-9);
-        assertVec3d(v, 2+7, 3-13, 5+11, 1e-9);
+        assertVec3d(r, 7, 11, 13, EPSILON);
+        assertVec3d(v, 2+7, 3-13, 5+11, EPSILON);
     }
 
     public void testFastRigidInverseTransform() throws Exception {
@@ -127,7 +129,7 @@ public class Vec3dTest extends TestCase {
         Vec3d v = new Vec3d(2+7, 3-13, 5+11);
         Vec3d r = new Vec3d();
         r.fastRigidInverseTransform(t, v);
-        assertVec3d(r, 7, 11, 13, 1e-9);
-        assertVec3d(v, 2+7, 3-13, 5+11, 1e-9);
+        assertVec3d(r, 7, 11, 13, EPSILON);
+        assertVec3d(v, 2+7, 3-13, 5+11, EPSILON);
     }
 }

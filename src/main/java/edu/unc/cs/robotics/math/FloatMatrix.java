@@ -1,3 +1,4 @@
+// Automatically generated from DoubleMatrix.java, DO NOT EDIT!
 package edu.unc.cs.robotics.math;
 
 public interface FloatMatrix extends Matrix {
