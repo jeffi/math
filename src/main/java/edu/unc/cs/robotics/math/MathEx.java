@@ -1,9 +1,9 @@
 package edu.unc.cs.robotics.math;
 
 /**
- * Created by jeffi on 10/31/16.
+ * Some possibly useful math routines
  */
-public class MathEx {
+public final class MathEx {
     private MathEx() {
         throw new AssertionError("static utility class, no instances");
     }

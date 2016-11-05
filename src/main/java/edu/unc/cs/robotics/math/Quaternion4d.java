@@ -3,7 +3,12 @@ package edu.unc.cs.robotics.math;
 import java.util.Random;
 
 /**
- * Created by jeffi on 11/2/16.
+ * A quaternion.  This class focuses on the their use as
+ * a representation for rotations in 3D.
+ *
+ * <p>This class's API generally follows the formula of having {@code this}
+ * be the result.  To efficiently use this class, pre-allocate all the
+ * result (and operand) quaternions.</p>
  */
 public final class Quaternion4d implements DoubleVector, Cloneable {
     private static final int HASH_BASE = Quaternion4d.class.getName().hashCode();

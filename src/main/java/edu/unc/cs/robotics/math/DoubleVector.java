@@ -1,7 +1,7 @@
 package edu.unc.cs.robotics.math;
 
 /**
- * Created by jeffi on 11/2/16.
+ * Typed extension of Vector.
  */
 public interface DoubleVector extends DoubleMatrix, Vector {
     double getCoeff(int i);

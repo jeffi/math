@@ -9,10 +9,29 @@ public final class Geom3f {
         throw new AssertionError("no instances");
     }
 
+    /**
+     * Computes the squared distance between a point and a segment
+     *
+     * @param pt the point
+     * @param s0 endpoint of segment
+     * @param s1 endpoint of segment
+     * @return the squared distance between pt and segment from s0 to s1
+     */
     public static float distPointSegmentSquared(Vec3f pt, Vec3f s0, Vec3f s1) {
         return distPointSegmentSquared(pt, s0, s1, null);
     }
 
+    /**
+     * Computes the squared distance between a point an a segment, optionally
+     * returing the point on the segment closed to the point.
+     *
+     * @param pt the point
+     * @param s0 endpoint of segment
+     * @param s1 endpoint of segment
+     * @param nearest [output] on return contains the point closed to pt on
+     * segment from s0 to s1 (may be null)
+     * @return the squared distance between pt and segment from s0 to s1
+     */
     public static float distPointSegmentSquared(Vec3f pt, Vec3f s0, Vec3f s1, Vec3f nearest) {
         // implementation is inlined/optimized from the following:
         //
@@ -65,6 +84,15 @@ public final class Geom3f {
 
     }
 
+    /**
+     * Computes the squared distance between two segments.
+     *
+     * @param s1p0 endpoint of first segment
+     * @param s1p1 endpoint of first segment
+     * @param s2p0 endpoint of second segment
+     * @param s2p1 endpoint of second segment
+     * @return the squared distance between two segments
+     */
     public static float distSquaredSegmentSegment(
         Vec3f s1p0, Vec3f s1p1,
         Vec3f s2p0, Vec3f s2p1)
@@ -75,6 +103,20 @@ public final class Geom3f {
             null, null);
     }
 
+    /**
+     * Computes the squared distance between two segments, and
+     * return the closest points on the segment.
+     *
+     * @param s1p0 endpoint of first segment
+     * @param s1p1 endpoint of first segment
+     * @param s2p0 endpoint of second segment
+     * @param s2p1 endpoint of second segment
+     * @param c1 [output] on return contains the point on first
+     * segment closest to the second segment (may be null if not needed)
+     * @param c2 [output] on return contains the point on second
+     * segment closest to the first segment (may be null if not needed)
+     * @return the squared distance between two segments
+     */
     public static float distSquaredSegmentSegment(
         Vec3f s1p0, Vec3f s1p1,
         Vec3f s2p0, Vec3f s2p1,
@@ -168,6 +210,15 @@ public final class Geom3f {
         }
     }
 
+    /**
+     * Short hand for @{code (float)Math.sqrt(distSquaredSegmentSegment(...))}.
+     *
+     * @param s1p0 endpoint of first segment
+     * @param s1p1 endpoint of first segment
+     * @param s2p0 endpoint of second segment
+     * @param s2p1 endpoint of second segment
+     * @return the distance between two segments
+     */
     public static float distSegmentSegment(
         Vec3f s1p0, Vec3f s1p1,
         Vec3f s2p0, Vec3f s2p1)

@@ -1,7 +1,10 @@
 package edu.unc.cs.robotics.math;
 
 /**
- * Created by jeffi on 11/2/16.
+ * Interface for mathematical vectors
+ *
+ * @see DoubleVector
+ * @see FloatVector
  */
 public interface Vector extends Matrix {
 }

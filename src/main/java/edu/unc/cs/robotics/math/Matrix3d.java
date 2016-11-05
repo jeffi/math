@@ -3,7 +3,11 @@ package edu.unc.cs.robotics.math;
 import java.util.function.DoubleFunction;
 
 /**
- * Created by jeffi on 11/2/16.
+ * A 3x3 matrix, specialized for representing rotations in 3D.
+ *
+ * <p>This class's API generally follows the formula of having {@code this}
+ * be the result.  To efficiently use this class, pre-allocate all the
+ * result (and operand) matrices.</p>
  */
 public final class Matrix3d implements DoubleMatrix, Cloneable {
 

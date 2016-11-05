@@ -582,17 +582,24 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
 
     @Override
     public int rows() {
-        return ROWS;
+        return 4;
     }
 
+    /**
+     * Returns the number of columns in the underlying matrix.
+     * In this case the return value is 4 since it includes the
+     * implied last row.
+     *
+     * @return 4
+     */
     @Override
     public int columns() {
-        return COLUMNS;
+        return 4;
     }
 
     @Override
     public int size() {
-        return ROWS*COLUMNS;
+        return 16;
     }
 
     @Override
@@ -639,7 +646,14 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
         case 9: m21 = value; break;
         case 10: m22 = value; break;
         case 11: m23 = value; break;
-        default: throw new MatrixIndexOutOfBoundsException(this, r, c);
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+            throw new UnsupportedOperationException(
+                "last row is not modifiable");
+        default:
+            throw new MatrixIndexOutOfBoundsException(this, r, c);
         }
     }
 

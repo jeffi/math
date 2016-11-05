@@ -2,7 +2,11 @@
 package edu.unc.cs.robotics.math;
 
 /**
- * Created by jeffi on 11/3/16.
+ * A 2D vector.
+ *
+ * <p>This class's API generally follows the formula of having {@code this}
+ * be the result.  To efficiently use this class, pre-allocate all the
+ * result (and operand) vectors.</p>
  */
 public final class Vec2f implements FloatVector, Cloneable {
     private static final int HASH_BASE = Vec2f.class.getName().hashCode();

@@ -2,7 +2,7 @@
 package edu.unc.cs.robotics.math;
 
 /**
- * Created by jeffi on 11/2/16.
+ * Typed extension of Vector.
  */
 public interface FloatVector extends FloatMatrix, Vector {
     float getCoeff(int i);

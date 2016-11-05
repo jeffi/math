@@ -1,7 +1,7 @@
 package edu.unc.cs.robotics.math;
 
 /**
- * Created by jeffi on 8/2/16.
+ * Polynomial solver
  */
 public class Polynomials {
     private static final double EPSILON = Math.ulp(1.0);
