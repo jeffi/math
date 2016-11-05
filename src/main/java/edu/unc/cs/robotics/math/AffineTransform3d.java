@@ -143,6 +143,10 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
         set(r, t.x, t.y, t.z);
     }
 
+    public AffineTransform3d(double[] m) {
+        set(m);
+    }
+
     // ================================================================
     // Set methods (methods that change the entire matrix)
     // ================================================================
@@ -264,6 +268,41 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
 
     public AffineTransform3d set(Matrix3d r, Vec3d t) {
         return set(r, t.x, t.y, t.z);
+    }
+
+    public AffineTransform3d set(double[] m) {
+        m00 = m[0];
+        m10 = m[1];
+        m20 = m[2];
+        m01 = m[3];
+        m11 = m[4];
+        m21 = m[5];
+        m02 = m[6];
+        m12 = m[7];
+        m22 = m[8];
+        m03 = m[9];
+        m13 = m[10];
+        m23 = m[11];
+        return this;
+    }
+
+    public AffineTransform3d set(double[] m, int offset, int stride) {
+        m00 = m[offset];
+        m10 = m[offset + 1];
+        m20 = m[offset + 2];
+        offset += stride;
+        m01 = m[offset];
+        m11 = m[offset + 1];
+        m21 = m[offset + 2];
+        offset += stride;
+        m02 = m[offset];
+        m12 = m[offset + 1];
+        m22 = m[offset + 2];
+        offset += stride;
+        m03 = m[offset];
+        m13 = m[offset + 1];
+        m23 = m[offset + 2];
+        return this;
     }
 
     /**

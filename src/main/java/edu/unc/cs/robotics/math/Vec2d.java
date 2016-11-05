@@ -17,6 +17,11 @@ public final class Vec2d implements DoubleVector, Cloneable {
         this.y = y;
     }
 
+    public Vec2d(double[] v) {
+        x = v[0];
+        y = v[1];
+    }
+
     public Vec2d set(double x, double y) {
         this.x = x;
         this.y = y;

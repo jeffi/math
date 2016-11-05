@@ -18,6 +18,11 @@ public final class Vec2f implements FloatVector, Cloneable {
         this.y = y;
     }
 
+    public Vec2f(float[] v) {
+        x = v[0];
+        y = v[1];
+    }
+
     public Vec2f set(float x, float y) {
         this.x = x;
         this.y = y;

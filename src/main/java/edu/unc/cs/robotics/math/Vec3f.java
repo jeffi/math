@@ -33,6 +33,12 @@ public final class Vec3f implements FloatVector, Cloneable {
         this.z = v.z;
     }
 
+    public Vec3f(float[] v) {
+        this.x = v[0];
+        this.y = v[1];
+        this.z = v[2];
+    }
+
     @Override
     public int columns() {
         return 1;

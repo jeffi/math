@@ -42,16 +42,21 @@ s/\(h >>> 32\) \^ //
 EOF
 }
 
+main="src/main/java/edu/unc/cs/robotics/math"
+test="src/test/java/edu/unc/cs/robotics/math"
+
 # Convert the interfaces
 for file in Matrix Vector ; do
-    dtof "src/main/java/edu/unc/cs/robotics/math/Double$file.java" \
-         "src/main/java/edu/unc/cs/robotics/math/Float$file.java"
+    dtof "$main/Double$file.java" "$main/Float$file.java"
 done
 
 # Convert the classes and their tests
 for file in AffineTransform3 Matrix3 Vec2 Vec3 Quaternion4 Geom3 ; do
-    main="src/main/java/edu/unc/cs/robotics/math/$file"
-    test="src/test/java/edu/unc/cs/robotics/math/$file"
-    dtof "${main}d.java" "${main}f.java"
-    dtof "${test}dTest.java" "${test}fTest.java"
+    dtof "$main/${file}d.java" "$main/${file}f.java"
+    dtof "$test/${file}dTest.java" "$test/${file}fTest.java"
+done
+
+for file in Arrays ; do
+    dtof "$main/Double$file.java" "$main/Float$file.java"
+    dtof "$test/Double${file}Test.java" "$test/Float${file}Test.java"
 done
