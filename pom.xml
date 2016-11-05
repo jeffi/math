@@ -7,6 +7,13 @@
   <groupId>edu.unc.cs.robotics.math</groupId>
   <artifactId>math</artifactId>
   <version>1.0</version>
+  <packaging>jar</packaging>
+
+  <licenses>
+    <license>
+      <name>BSD 2-Clause License</name>
+    </license>
+  </licenses>
 
   <build>
     <plugins>
