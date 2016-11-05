@@ -49,7 +49,7 @@ for file in Matrix Vector ; do
 done
 
 # Convert the classes and their tests
-for file in AffineTransform3 Matrix3 Vec2 Vec3 Quaternion4 ; do
+for file in AffineTransform3 Matrix3 Vec2 Vec3 Quaternion4 Geom3 ; do
     main="src/main/java/edu/unc/cs/robotics/math/$file"
     test="src/test/java/edu/unc/cs/robotics/math/$file"
     dtof "${main}d.java" "${main}f.java"
