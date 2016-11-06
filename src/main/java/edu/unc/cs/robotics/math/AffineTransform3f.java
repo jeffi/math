@@ -144,8 +144,50 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
         set(r, t.x, t.y, t.z);
     }
 
+    /**
+     * Creates a new transform that is a translation with the specified
+     * values for translation.
+     *
+     * @param tx translation in x
+     * @param ty translation in y
+     * @param tz translation in z
+     */
+    public AffineTransform3f(float tx, float ty, float tz) {
+        setTranslation(tx, ty, tz);
+    }
+
+    /**
+     * Creates a new transform that is a translation with the specified
+     * vector for its translation.
+     *
+     * @param t the translation in (x,y,z)
+     */
+    public AffineTransform3f(Vec3f t) {
+        setTranslation(t.x, t.y, t.z);
+    }
+
+    /**
+     * Creates a new transform that with the values from an array with
+     * the 12 elements in column-major order.
+     *
+     * @param m the values to set for this transform matrix.
+     * @see #set(float[])
+     */
     public AffineTransform3f(float[] m) {
         set(m);
+    }
+
+    /**
+     * Creates a new transform that with the values from an array with
+     * the 12 elements in column-major order.
+     *
+     * @param m the values to set for this transform matrix.
+     * @param offset the offset of the (0, 0) coefficient
+     * @param stride the offset between columns
+     * @see #set(float[], int, int)
+     */
+    public AffineTransform3f(float[] m, int offset, int stride) {
+        set(m, offset, stride);
     }
 
     // ================================================================
@@ -245,13 +287,22 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
      *
      * @param q the rotation to set
      * @param t the translation to set
-     * @return this
+     * @return {@code this}
      */
     public AffineTransform3f set(Quaternion4f q, Vec3f t) {
         return set(q, t.x, t.y, t.z);
     }
 
-    public AffineTransform3f set(Matrix3f r, float x, float y, float z) {
+    /**
+     * Sets this transform to be a rotation and translation.
+     *
+     * @param r the rotation
+     * @param tx translation in x
+     * @param ty translation in y
+     * @param tz translation in z
+     * @return {@code this}
+     */
+    public AffineTransform3f set(Matrix3f r, float tx, float ty, float tz) {
         m00 = r.m00;
         m01 = r.m01;
         m02 = r.m02;
@@ -261,16 +312,30 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
         m20 = r.m20;
         m21 = r.m21;
         m22 = r.m22;
-        m03 = x;
-        m13 = y;
-        m23 = z;
+        m03 = tx;
+        m13 = ty;
+        m23 = tz;
         return this;
     }
 
+    /**
+     * Sets this transform to be a rotation and translation.
+     *
+     * @param r the rotation
+     * @param t the translation
+     * @return {@code this}
+     */
     public AffineTransform3f set(Matrix3f r, Vec3f t) {
         return set(r, t.x, t.y, t.z);
     }
 
+    /**
+     * Sets the values of this from a 3x4 matrix stored as a column-major array.
+     *
+     * @param m the matrix to set
+     * @return {@code this}
+     * @see #AffineTransform3f(float[])
+     */
     public AffineTransform3f set(float[] m) {
         m00 = m[0];
         m10 = m[1];
@@ -287,6 +352,17 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
         return this;
     }
 
+    /**
+     * Sets the value of this from a 3x4 matrix stored as a column-major array.
+     * The values are pulled from the specified offset and stride within the
+     * array.
+     *
+     * @param m the matrix to set
+     * @param offset the offset of the (0, 0) element
+     * @param stride the offset between columns
+     * @return {@code this}
+     * @see #AffineTransform3f(float[], int, int)
+     */
     public AffineTransform3f set(float[] m, int offset, int stride) {
         m00 = m[offset];
         m10 = m[offset + 1];
@@ -534,7 +610,7 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
     }
 
     /**
-     * Equivalent to {@code setTranslate(x, y, z).mulRPY(roll, pitch, yaw)}
+     * Equivalent to {@code translation(x, y, z).rotateRPY(roll, pitch, yaw)}
      *
      * @param x translation x
      * @param y translation y
@@ -544,7 +620,7 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
      * @param yaw yaw angle
      * @return this
      */
-    public AffineTransform3f setTranslationRPY(
+    public AffineTransform3f translationRPY(
         float x, float y, float z,
         float roll, float pitch, float yaw)
     {
@@ -575,6 +651,73 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
 
         return this;
     }
+
+    // ================================================================
+    // Set translation independent of rotation
+    // ================================================================
+
+    /**
+     * Sets the translation to the specified values while leaving the
+     * rotation untouched.
+     *
+     * @param x the new value for the translation in x
+     * @param y the new value for the translation in y
+     * @param z the new value for the translation in z
+     * @return {@code this}
+     */
+    public AffineTransform3f setTranslation(float x, float y, float z) {
+        m03 = x;
+        m13 = y;
+        m23 = z;
+        return this;
+    }
+
+    /**
+     * Sets the translation to the specified values while leaving the
+     * rotation untouched.
+     *
+     * @param t the new value for the translation
+     * @return {@code this}
+     * @see #setTranslation(Vec3f)
+     */
+    public AffineTransform3f setTranslation(Vec3f t) {
+        return setTranslation(t.x, t.y, t.z);
+    }
+
+    /**
+     * Adds the specified value to the translation.  This is equivalent
+     * to multiplying this transform by a translation, with the translation
+     * as the left-hand side operand.
+     *
+     * <pre>
+     *     a.preTranslate(x, y, z);
+     *     // same as:
+     *     // a.mul(new AffineTransform3f().translation(x, y, z), a);
+     * </pre>
+     *
+     * @param x the translation in x to add
+     * @param y the translation in y to add
+     * @param z the translation in z to add
+     * @return this
+     */
+    public AffineTransform3f preTranslate(float x, float y, float z) {
+        this.m03 += x;
+        this.m13 += y;
+        this.m23 += z;
+        return this;
+    }
+
+    /**
+     * Adds the specified vector to the translation.
+     *
+     * @param t the translation to add
+     * @return this
+     * @see #preTranslate(float, float, float)
+     */
+    public AffineTransform3f preTranslate(Vec3f t) {
+        return preTranslate(t.x, t.y, t.z);
+    }
+
 
     // ================================================================
     // Interface Methods
@@ -706,6 +849,50 @@ public final class AffineTransform3f implements FloatMatrix, Cloneable {
         this.m23 = a20*b0 + a21*b1 + a22*b2 + a.m23;
         return this;
     }
+
+    // Alternate multiplication formulation that is slightly slower
+//    public AffineTransform3f mul2(AffineTransform3f a, AffineTransform3f b) {
+//        final float b00 = b.m00;
+//        final float b10 = b.m10;
+//        final float b20 = b.m20;
+//
+//        final float b01 = b.m01;
+//        final float b11 = b.m11;
+//        final float b21 = b.m21;
+//
+//        final float b02 = b.m02;
+//        final float b12 = b.m12;
+//        final float b22 = b.m22;
+//
+//        final float b03 = b.m03;
+//        final float b13 = b.m13;
+//        final float b23 = b.m23;
+//
+//        float a0 = a.m00;
+//        float a1 = a.m01;
+//        float a2 = a.m02;
+//        this.m00 = a0*b00 + a1*b10 + a2*b20;
+//        this.m01 = a0*b01 + a1*b11 + a2*b21;
+//        this.m02 = a0*b02 + a1*b12 + a2*b22;
+//        this.m03 = a0*b03 + a1*b13 + a2*b23 + a.m03;
+//
+//        a0 = a.m10;
+//        a1 = a.m11;
+//        a2 = a.m12;
+//        this.m10 = a0*b00 + a1*b10 + a2*b20;
+//        this.m11 = a0*b01 + a1*b11 + a2*b21;
+//        this.m12 = a0*b02 + a1*b12 + a2*b22;
+//        this.m13 = a0*b03 + a1*b13 + a2*b23 + a.m13;
+//
+//        a0 = a.m20;
+//        a1 = a.m21;
+//        a2 = a.m22;
+//        this.m20 = a0*b00 + a1*b10 + a2*b20;
+//        this.m21 = a0*b01 + a1*b11 + a2*b21;
+//        this.m22 = a0*b02 + a1*b12 + a2*b22;
+//        this.m23 = a0*b03 + a1*b13 + a2*b23 + a.m23;
+//        return this;
+//    }
 
     /**
      * Multiplies this matrix by the argument.  @{code this x b}

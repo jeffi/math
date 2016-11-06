@@ -420,4 +420,48 @@ public class AffineTransform3fTest extends TestCase {
         assertEquals(4.0f, I.m13, EPSILON);
         assertEquals(-3.0f, I.m23, EPSILON);
     }
+
+    public void testBenchmark() {
+        if (!"true".equals(System.getProperty("benchmark"))) {
+            System.out.println("skipping benchmarks, set -Dbenchmark=true to enable");
+            return;
+        }
+
+        // On MacBook Pro, this benchmarks at ~12.5f ns/mul
+        // Bizarrely, the same ops with Eigen::Transform run at approx ~24 ns/mul
+        // When the same transform multiply code is reproduced in C++ directly
+        // then we see about ~11.9f ns/mul in C/C++ (w/clang++ -O3 -favx -ffma)
+
+        AffineTransform3f a = new AffineTransform3f();
+        AffineTransform3f b = new AffineTransform3f();
+        AffineTransform3f c = new AffineTransform3f();
+
+        final int N = 1000000;
+        float sum = 0.0f;
+        float count = 0;
+        for (int i=0 ; i < 100 ; ++i) {
+            c.identity();
+            a.rotation(-1, 2, 3, 0.1f);
+            b.rotation(3, 1, -2, 0.1f);
+
+            long startTime = System.nanoTime();
+            bench(a, b, c, N);
+            long elapsed = System.nanoTime() - startTime;
+            float nsPerOp = elapsed/(2.0f*N);
+            System.out.printf("%.1f ns/mul%n", nsPerOp);
+            if (i > 5) {
+                sum += nsPerOp;
+                count++;
+            }
+        }
+        System.out.println("Average: "+sum/count);
+        System.out.println(c);
+    }
+
+    private static void bench(AffineTransform3f a, AffineTransform3f b, AffineTransform3f c, int N) {
+        for (int i = 0 ; i < N ; ++i) {
+            c.mul(c, a);
+            c.mul(c, b);
+        }
+    }
 }

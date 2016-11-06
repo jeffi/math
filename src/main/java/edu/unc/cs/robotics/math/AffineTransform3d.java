@@ -849,6 +849,50 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
         return this;
     }
 
+    // Alternate multiplication formulation that is slightly slower
+//    public AffineTransform3d mul2(AffineTransform3d a, AffineTransform3d b) {
+//        final double b00 = b.m00;
+//        final double b10 = b.m10;
+//        final double b20 = b.m20;
+//
+//        final double b01 = b.m01;
+//        final double b11 = b.m11;
+//        final double b21 = b.m21;
+//
+//        final double b02 = b.m02;
+//        final double b12 = b.m12;
+//        final double b22 = b.m22;
+//
+//        final double b03 = b.m03;
+//        final double b13 = b.m13;
+//        final double b23 = b.m23;
+//
+//        double a0 = a.m00;
+//        double a1 = a.m01;
+//        double a2 = a.m02;
+//        this.m00 = a0*b00 + a1*b10 + a2*b20;
+//        this.m01 = a0*b01 + a1*b11 + a2*b21;
+//        this.m02 = a0*b02 + a1*b12 + a2*b22;
+//        this.m03 = a0*b03 + a1*b13 + a2*b23 + a.m03;
+//
+//        a0 = a.m10;
+//        a1 = a.m11;
+//        a2 = a.m12;
+//        this.m10 = a0*b00 + a1*b10 + a2*b20;
+//        this.m11 = a0*b01 + a1*b11 + a2*b21;
+//        this.m12 = a0*b02 + a1*b12 + a2*b22;
+//        this.m13 = a0*b03 + a1*b13 + a2*b23 + a.m13;
+//
+//        a0 = a.m20;
+//        a1 = a.m21;
+//        a2 = a.m22;
+//        this.m20 = a0*b00 + a1*b10 + a2*b20;
+//        this.m21 = a0*b01 + a1*b11 + a2*b21;
+//        this.m22 = a0*b02 + a1*b12 + a2*b22;
+//        this.m23 = a0*b03 + a1*b13 + a2*b23 + a.m23;
+//        return this;
+//    }
+
     /**
      * Multiplies this matrix by the argument.  @{code this x b}
      *
