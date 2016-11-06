@@ -143,8 +143,50 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
         set(r, t.x, t.y, t.z);
     }
 
+    /**
+     * Creates a new transform that is a translation with the specified
+     * values for translation.
+     *
+     * @param tx translation in x
+     * @param ty translation in y
+     * @param tz translation in z
+     */
+    public AffineTransform3d(double tx, double ty, double tz) {
+        setTranslation(tx, ty, tz);
+    }
+
+    /**
+     * Creates a new transform that is a translation with the specified
+     * vector for its translation.
+     *
+     * @param t the translation in (x,y,z)
+     */
+    public AffineTransform3d(Vec3d t) {
+        setTranslation(t.x, t.y, t.z);
+    }
+
+    /**
+     * Creates a new transform that with the values from an array with
+     * the 12 elements in column-major order.
+     *
+     * @param m the values to set for this transform matrix.
+     * @see #set(double[])
+     */
     public AffineTransform3d(double[] m) {
         set(m);
+    }
+
+    /**
+     * Creates a new transform that with the values from an array with
+     * the 12 elements in column-major order.
+     *
+     * @param m the values to set for this transform matrix.
+     * @param offset the offset of the (0, 0) coefficient
+     * @param stride the offset between columns
+     * @see #set(double[], int, int)
+     */
+    public AffineTransform3d(double[] m, int offset, int stride) {
+        set(m, offset, stride);
     }
 
     // ================================================================
@@ -244,13 +286,22 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
      *
      * @param q the rotation to set
      * @param t the translation to set
-     * @return this
+     * @return {@code this}
      */
     public AffineTransform3d set(Quaternion4d q, Vec3d t) {
         return set(q, t.x, t.y, t.z);
     }
 
-    public AffineTransform3d set(Matrix3d r, double x, double y, double z) {
+    /**
+     * Sets this transform to be a rotation and translation.
+     *
+     * @param r the rotation
+     * @param tx translation in x
+     * @param ty translation in y
+     * @param tz translation in z
+     * @return {@code this}
+     */
+    public AffineTransform3d set(Matrix3d r, double tx, double ty, double tz) {
         m00 = r.m00;
         m01 = r.m01;
         m02 = r.m02;
@@ -260,16 +311,30 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
         m20 = r.m20;
         m21 = r.m21;
         m22 = r.m22;
-        m03 = x;
-        m13 = y;
-        m23 = z;
+        m03 = tx;
+        m13 = ty;
+        m23 = tz;
         return this;
     }
 
+    /**
+     * Sets this transform to be a rotation and translation.
+     *
+     * @param r the rotation
+     * @param t the translation
+     * @return {@code this}
+     */
     public AffineTransform3d set(Matrix3d r, Vec3d t) {
         return set(r, t.x, t.y, t.z);
     }
 
+    /**
+     * Sets the values of this from a 3x4 matrix stored as a column-major array.
+     *
+     * @param m the matrix to set
+     * @return {@code this}
+     * @see #AffineTransform3d(double[])
+     */
     public AffineTransform3d set(double[] m) {
         m00 = m[0];
         m10 = m[1];
@@ -286,6 +351,17 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
         return this;
     }
 
+    /**
+     * Sets the value of this from a 3x4 matrix stored as a column-major array.
+     * The values are pulled from the specified offset and stride within the
+     * array.
+     *
+     * @param m the matrix to set
+     * @param offset the offset of the (0, 0) element
+     * @param stride the offset between columns
+     * @return {@code this}
+     * @see #AffineTransform3d(double[], int, int)
+     */
     public AffineTransform3d set(double[] m, int offset, int stride) {
         m00 = m[offset];
         m10 = m[offset + 1];
@@ -533,7 +609,7 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
     }
 
     /**
-     * Equivalent to {@code setTranslate(x, y, z).mulRPY(roll, pitch, yaw)}
+     * Equivalent to {@code translation(x, y, z).rotateRPY(roll, pitch, yaw)}
      *
      * @param x translation x
      * @param y translation y
@@ -543,7 +619,7 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
      * @param yaw yaw angle
      * @return this
      */
-    public AffineTransform3d setTranslationRPY(
+    public AffineTransform3d translationRPY(
         double x, double y, double z,
         double roll, double pitch, double yaw)
     {
@@ -574,6 +650,73 @@ public final class AffineTransform3d implements DoubleMatrix, Cloneable {
 
         return this;
     }
+
+    // ================================================================
+    // Set translation independent of rotation
+    // ================================================================
+
+    /**
+     * Sets the translation to the specified values while leaving the
+     * rotation untouched.
+     *
+     * @param x the new value for the translation in x
+     * @param y the new value for the translation in y
+     * @param z the new value for the translation in z
+     * @return {@code this}
+     */
+    public AffineTransform3d setTranslation(double x, double y, double z) {
+        m03 = x;
+        m13 = y;
+        m23 = z;
+        return this;
+    }
+
+    /**
+     * Sets the translation to the specified values while leaving the
+     * rotation untouched.
+     *
+     * @param t the new value for the translation
+     * @return {@code this}
+     * @see #setTranslation(Vec3d)
+     */
+    public AffineTransform3d setTranslation(Vec3d t) {
+        return setTranslation(t.x, t.y, t.z);
+    }
+
+    /**
+     * Adds the specified value to the translation.  This is equivalent
+     * to multiplying this transform by a translation, with the translation
+     * as the left-hand side operand.
+     *
+     * <pre>
+     *     a.preTranslate(x, y, z);
+     *     // same as:
+     *     // a.mul(new AffineTransform3d().translation(x, y, z), a);
+     * </pre>
+     *
+     * @param x the translation in x to add
+     * @param y the translation in y to add
+     * @param z the translation in z to add
+     * @return this
+     */
+    public AffineTransform3d preTranslate(double x, double y, double z) {
+        this.m03 += x;
+        this.m13 += y;
+        this.m23 += z;
+        return this;
+    }
+
+    /**
+     * Adds the specified vector to the translation.
+     *
+     * @param t the translation to add
+     * @return this
+     * @see #preTranslate(double, double, double)
+     */
+    public AffineTransform3d preTranslate(Vec3d t) {
+        return preTranslate(t.x, t.y, t.z);
+    }
+
 
     // ================================================================
     // Interface Methods

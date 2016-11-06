@@ -9,6 +9,62 @@ public final class MathEx {
     }
 
     /**
+     * Casts an array of doubles to an array of floats.
+     *
+     * @param dst where to store results
+     * @param src source of copy
+     */
+    public static void convert(float[] dst, double[] src) {
+        final int n = dst.length;
+        if (n != src.length) {
+            throw new IllegalArgumentException();
+        }
+        for (int i=0 ; i<n ; ++i) {
+            dst[i] = (float)src[i];
+        }
+    }
+
+    /**
+     * Casts an array of floats to an array of doubles.
+     *
+     * @param dst where to store results
+     * @param src source of copy
+     */
+    public static void convert(double[] dst, float[] src) {
+        final int n = dst.length;
+        if (n != src.length) {
+            throw new IllegalArgumentException();
+        }
+        for (int i=0 ; i<n ; ++i) {
+            dst[i] = src[i];
+        }
+    }
+
+    /**
+     * Returns a copy of the array cast to floats.
+     *
+     * @param doubles the array of doubles to convert
+     * @return an array of floats
+     */
+    public static float[] toFloat(double[] doubles) {
+        final float[] floats = new float[doubles.length];
+        convert(floats, doubles);
+        return floats;
+    }
+
+    /**
+     * Returns a copy of the array cast to doubles.
+     *
+     * @param floats the array of floats to convert
+     * @return an array of floats
+     */
+    public static double[] toDouble(float[] floats) {
+        final double[] doubles = new double[floats.length];
+        convert(doubles, floats);
+        return doubles;
+    }
+
+    /**
      * Tests for bit-wise equality between two floats.
      * This is computationally equivalent to:
      * {@code Float.floatToIntBits(a) == Float.floatToIntBits(b)}.
