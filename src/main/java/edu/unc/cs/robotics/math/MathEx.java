@@ -123,4 +123,17 @@ public final class MathEx {
             return Double.isNaN(a) && Double.isNaN(b);
         }
     }
+
+    /**
+     * Returns the nearest multiple of {@code m} for the value in {@code v},
+     * where the result is always >= {@code v}.  Thus {@code ceilMultiple(0, 10) == 0}
+     * and {@code ceilMultiple(0.000000001, 10) == 10}
+     *
+     * @param v the value to compute the ceil
+     * @param m the multiple
+     * @return {@code Math.ceil(v / m) * m}
+     */
+    public static double ceilMultiple(double v, double m) {
+        return Math.ceil(v / m) * m;
+    }
 }
