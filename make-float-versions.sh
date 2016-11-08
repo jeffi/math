@@ -13,6 +13,9 @@ s/doubleToLongBits/floatToIntBits/g
 s/double/float/g
 s/Double/Float/g
 
+# Convert class names
+s/([A-Z][A-Za-z0-8]*[234X])d/\1f/g
+
 # Convert back to DoubleFunction since there is no FloatFunction
 s/FloatFunction/DoubleFunction/g
 s/([a-z]\.apply)/(float)\1/g
@@ -27,10 +30,11 @@ s/Math\.PI/(float)Math.PI/g
 # Handle precision with a standard constant name
 s/EPSILON = 1e-9/EPSILON = 1e-6/g
 
+
 # Convert literals to have 'f' suffix
 s/([0-9]+\.[0-9]+)/\1f/g
 s/([0-9]+e[-+]?[0-9]+)/\1f/g
-s/([a-z][0-9])d/\1f/g
+# s/([a-z][0-9])d/\1f/g
 
 # This is for hashCode implemention.  The double versions accumulate a long
 # then xor the top and bottom 32 bits.  For float versions we need to remove
@@ -51,7 +55,7 @@ for file in Matrix Vector ; do
 done
 
 # Convert the classes and their tests
-for file in AffineTransform3 Matrix3 Vec2 Vec3 Quaternion4 Geom3 ; do
+for file in AffineTransform3 Matrix3 Vec2 Vec3 Quaternion4 Geom2 Geom3 GeomX ; do
     dtof "$main/${file}d.java" "$main/${file}f.java"
     dtof "$test/${file}dTest.java" "$test/${file}fTest.java"
 done

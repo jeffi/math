@@ -85,6 +85,60 @@ public final class Vec2d implements DoubleVector, Cloneable {
         return this;
     }
 
+    /**
+     * Returns the squared Euclidean distance between a pair of points
+     *
+     * @param x0 x coordinate of first point
+     * @param y0 y coordinate of first point
+     * @param x1 x coordinate of second point
+     * @param y1 y coordinate of second point
+     * @return squared distance
+     * @see #dist(double, double, double, double)
+     * @see #distSquared(Vec2d)
+     */
+    public static double distSquared(double x0, double y0, double x1, double y1) {
+        final double dx = x1 - x0;
+        final double dy = y1 - y0;
+        return dx*dx + dy*dy;
+    }
+
+    /**
+     * Returns the Euclidean distance between a pair of points
+     *
+     * @param x0 x coordinate of first point
+     * @param y0 y coordinate of first point
+     * @param x1 x coordinate of second point
+     * @param y1 y coordinate of second point
+     * @return distance
+     * @see #distSquared(double, double, double, double)
+     * @see #dist(Vec2d)
+     */
+    public static double dist(double x0, double y0, double x1, double y1) {
+        return Math.sqrt(distSquared(x0, y0, x1, y1));
+    }
+
+    /**
+     * Returns the squared Euclidean distance between a pair of points
+     *
+     * @param other the other point
+     * @return squared distance between this and the argument.
+     */
+    public double distSquared(Vec2d other) {
+        final double dx = other.x - x;
+        final double dy = other.y - y;
+        return dx*dx + dy*dy;
+    }
+
+    /**
+     * Returns the Euclidean distance between a pair of points.
+     *
+     * @param other the other point
+     * @return the distance between this and the argument.
+     */
+    public double dist(Vec2d other) {
+        return Math.sqrt(distSquared(other));
+    }
+
     public Vec2d scale(double s) {
         this.x *= s;
         this.y *= s;

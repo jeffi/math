@@ -86,6 +86,60 @@ public final class Vec2f implements FloatVector, Cloneable {
         return this;
     }
 
+    /**
+     * Returns the squared Euclidean distance between a pair of points
+     *
+     * @param x0 x coordinate of first point
+     * @param y0 y coordinate of first point
+     * @param x1 x coordinate of second point
+     * @param y1 y coordinate of second point
+     * @return squared distance
+     * @see #dist(float, float, float, float)
+     * @see #distSquared(Vec2f)
+     */
+    public static float distSquared(float x0, float y0, float x1, float y1) {
+        final float dx = x1 - x0;
+        final float dy = y1 - y0;
+        return dx*dx + dy*dy;
+    }
+
+    /**
+     * Returns the Euclidean distance between a pair of points
+     *
+     * @param x0 x coordinate of first point
+     * @param y0 y coordinate of first point
+     * @param x1 x coordinate of second point
+     * @param y1 y coordinate of second point
+     * @return distance
+     * @see #distSquared(float, float, float, float)
+     * @see #dist(Vec2f)
+     */
+    public static float dist(float x0, float y0, float x1, float y1) {
+        return (float)Math.sqrt(distSquared(x0, y0, x1, y1));
+    }
+
+    /**
+     * Returns the squared Euclidean distance between a pair of points
+     *
+     * @param other the other point
+     * @return squared distance between this and the argument.
+     */
+    public float distSquared(Vec2f other) {
+        final float dx = other.x - x;
+        final float dy = other.y - y;
+        return dx*dx + dy*dy;
+    }
+
+    /**
+     * Returns the Euclidean distance between a pair of points.
+     *
+     * @param other the other point
+     * @return the distance between this and the argument.
+     */
+    public float dist(Vec2f other) {
+        return (float)Math.sqrt(distSquared(other));
+    }
+
     public Vec2f scale(float s) {
         this.x *= s;
         this.y *= s;
