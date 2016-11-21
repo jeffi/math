@@ -1,5 +1,8 @@
 package edu.unc.cs.robotics.math;
 
+import static java.lang.Math.cbrt;
+import static java.lang.Math.sqrt;
+
 /**
  * Polynomial solver
  */
@@ -13,12 +16,152 @@ public class Polynomials {
     }
 
     /**
+     * Computes the roots of a quartic polynomial: {@code ax^4 + bx^3 + cx^2 + dx + e}.
+     *
+     * @param roots where the roots are stored upon return.  Thus array should have
+     * at least 4 elements.
+     * @param a the quartic term
+     * @param b the cubic term
+     * @param c the quadratic term
+     * @param d the linear term
+     * @param e the constant term
+     * @return the number of roots stored in {@code roots}, possibly 0, up to 4.
+     */
+    public static int solve(double[] roots, double a, double b, double c, double d, double e) {
+        if (isZero(a)) {
+            // quartic term is missing, solve as a cubic
+            return solve(roots, b, c, d, e);
+        }
+
+        // normalize to solve x^4 + bx^3 + cx^2 + dx + e
+//        b /= a;
+//        c /= a;
+//        d /= a;
+//        e /= a;
+
+        final double p = (8.0 * a*c - 3.0 * b*b) / (8.0 *a*a);
+        final double q = (b*b*b - 4.0*a*b*c + 8.0*a*a*d) / (8.0*a*a*a);
+        final double d0 = c*c - 3.0*b*d + 12.0*a*e;
+        final double d1 = 2.0*c*c*c - 9.0*b*c*d + 27.0*b*b*e + 27.0*a*d*d - 72.0*a*c*e;
+        final double de = (d1*d1 - 4.0*d0*d0*d0)/-27.0; // discriminant
+//        System.out.println("p = "+p);
+//        System.out.println("q = "+q);
+//        System.out.println("d0 = "+d0);
+//        System.out.println("d1 = "+d1);
+//        System.out.println("de = "+de);
+        Complex2d[] Qi = new Complex2d(d1*d1 - 4.0*d0*d0*d0).sqrt().add(d1).div(2.0).cbrt();
+//        System.out.println("Qi = " + Arrays.toString(Qi));
+        //System.out.println("Qq = "+ Qq);
+//        final double Q = Math.cbrt((d1 + Math.sqrt(d1*d1 - 4.0*d0*d0*d0))*0.5);
+//        System.out.println("Q = "+Q);
+        Complex2d[] Si = new Complex2d[3];
+        for (int i=0 ; i<3 ; ++i) {
+            final Complex2d qt = Qi[i];
+            Si[i] = qt.clone().add(new Complex2d(d0).div(qt)).div(3.0*a).add(-2.0/3.0*p).sqrt().div(2.0);
+//            System.out.println("Sq["+i+"] = "+Qq.get(i).add(new Complex(d0).divide(Qq.get(i))).divide(3.0*a).add(-2.0/3.0 * p).sqrt().divide(2.0));
+        }
+//        System.out.println("Si = "+Arrays.toString(Si));
+//        double S = Math.sqrt((-2.0/3.0)*p + (Q + d0/Q)/(3.0*a)) * 0.5;
+//        System.out.println("S = "+S);
+        // TODO: if S == 0 or Q == 0, see special cases of formula
+
+
+//        if (de > 0.0) {
+//            // When discriminant > 0, then Q is a non-real complex number.
+//            // We can compute S using the following formula:
+//
+//            double phi = Math.acos(d1 / (2.0*Math.sqrt(d0*d0*d0)));
+//            S = Math.sqrt(-2.0/3.0*p + 2.0/3.0*Math.sqrt(d0)*Math.cos(phi/3)/a) / 2.0;
+//            System.out.println(S);
+//        }
+
+        if (de == 0.0) {
+            // iff discriminant is 0, the polynomial has a multiple root
+
+            final double D = 64.0*e - 16.0*c*c + 16.0*b*b*c - 16.0*b*d - 3.0*b*b*b*b;
+            if (D == 0) {
+                if (p < 0.0) {
+                    throw new AssertionError("TODO");
+                } else if (p > 0.0 && q == 0.0) {
+                    throw new AssertionError("TODO");
+                } else {
+                    assert d0 == 0;
+                    roots[0] = b/-4.0;
+                    return 1;
+                }
+            }
+
+        }
+
+        int n = 0;
+        for (int i=0 ; i<3 ; ++i) {
+//            if (Math.abs(Si[i].imaginary) < Math.ulp(Si[i].real))
+//                S = Si[i].real;
+
+            Complex2d St = Si[i];
+            n = 0;
+            for (int r=0 ; r<4 ; ++r) {
+                Complex2d op = new Complex2d(b/(-4.0*a));
+                Complex2d rt = new Complex2d(-4).mul(St).mul(St).sub(2*p);
+                if ((r & 2) == 0) {
+                    op.sub(St);
+                    rt.add(new Complex2d(q).div(St));
+                } else {
+                    op.add(St);
+                    rt.sub(new Complex2d(q).div(St));
+                }
+                rt = rt.sqrt().div(2.0);
+                if ((r&1) == 0) {
+                    op = op.add(rt);
+                } else {
+                    op = op.sub(rt);
+                }
+
+                if (Math.abs(op.imaginary) < EPSILON) {
+                    roots[n++] = op.real;
+                }
+//                System.out.println(i+"["+r+"]: "+op);
+            }
+
+            if (n > 0) {
+                break;
+            }
+        }
+
+        // remove duplicates
+        for (int i=0 ; i<n ; ++i) {
+            for (int j=i+1 ; j<n ; ) {
+                if (Math.abs(roots[i] - roots[j]) < EPSILON) {
+                    roots[j] = roots[--n];
+//                    System.out.println("removed duplicate root: "+roots[i]);
+                } else {
+                    ++j;
+                }
+            }
+        }
+
+        // insertion sort
+        for (int i=0, j ; (j=i)<n-1 ; ) {
+            final double ai = roots[++i];
+            while (ai < roots[j]) {
+                roots[j+1] = roots[j];
+                if (j-- == 0) {
+                    break;
+                }
+            }
+            roots[j+1] = ai;
+        }
+
+        return n;
+    }
+
+    /**
      * Computes the roots of ax^3 + bx^2 + cx + d = 0.
      *
      * @param roots where the roots are stored upon return.  This
      * array should have at least 3 elements.
      * @param a cubic term
-     * @param b quadradic term
+     * @param b quadratic term
      * @param c linear term
      * @param d constant term
      * @return number of roots stored in {@code roots}, possibly 0, up to 3.
@@ -59,7 +202,7 @@ public class Polynomials {
                 roots[0] = p;
                 return 1;
             } else {
-                final double cbrt = Math.cbrt(q);
+                final double cbrt = cbrt(q);
 
                 // Return roots in increasing order
                 if (q < 0) {
@@ -77,9 +220,9 @@ public class Polynomials {
         } else if (t > 0) {
             // if t >= 0 we can use real math (not complex),
             // and there is only one root
-            double sqrt = Math.sqrt(t);
-            double c1 = Math.cbrt(q + sqrt);
-            double c2 = Math.cbrt(q - sqrt);
+            double sqrt = sqrt(t);
+            double c1 = cbrt(q + sqrt);
+            double c2 = cbrt(q - sqrt);
             roots[0] = c1 + c2 + p;
             return 1;
         } else {
@@ -125,7 +268,7 @@ public class Polynomials {
 //                roots[1] = 2.0 * cbrtOfAbs * Math.cos(nthPhi + slice) + p;
 //                roots[2] = 2.0 * cbrtOfAbs * Math.cos(nthPhi + slice*2) + p;
 
-            final double im = Math.sqrt(-t);
+            final double im = sqrt(-t);
 //                final double cbrtOfAbs = Math.pow(complexAbs(q, im), 1.0/3.0);
             final double cbrt = 2.0*Math.pow(q*q - t, 1.0/6.0);
             final double phi = Math.atan2(im, q)/3.0;
@@ -182,7 +325,7 @@ public class Polynomials {
             roots[0] = b*inv2a;
             return 1;
         }
-        double root = Math.sqrt(term);
+        double root = sqrt(term);
         roots[0] = (b - root)*inv2a;
         roots[1] = (b + root)*inv2a;
         return 2;

@@ -136,4 +136,56 @@ public final class MathEx {
     public static double ceilMultiple(double v, double m) {
         return Math.ceil(v / m) * m;
     }
+
+    /**
+     * Computes and returns the maximum of 3 values.
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @return maximum of a, b, or c
+     */
+    public static double max(double a, double b, double c) {
+        // delegate to Math.max since it handles NaNs and -0.0
+        return Math.max(Math.max(a, b), c);
+    }
+
+    /**
+     * Computes and returns the minimum of 3 values.
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @return minimum of a, b, or c
+     */
+    public static double min(double a, double b, double c) {
+        // delegate to Math.max since it handles NaNs and -0.0
+        return Math.min(Math.min(a, b), c);
+    }
+
+    /**
+     * Computes and returns the maximum of 3 values.
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @return maximum of a, b, or c
+     */
+    public static float max(float a, float b, float c) {
+        // delegate to Math.max since it handles NaNs and -0.0
+        return Math.max(Math.max(a, b), c);
+    }
+
+    /**
+     * Computes and returns the minimum of 3 values.
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @return minimum of a, b, or c
+     */
+    public static float min(float a, float b, float c) {
+        // delegate to Math.max since it handles NaNs and -0.0
+        return Math.min(Math.min(a, b), c);
+    }
 }
