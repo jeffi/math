@@ -104,7 +104,7 @@ public class PolynomialsTest extends TestCase {
             double v = (((a*x + b)*x + c)*x + d)*x + e;
             assertEquals("root " + i + " = "+roots[i], 0.0, v, 1e-9);
         }
-        assertEquals("number of roots", expected.length, n);
+        assertEquals("number of roots: "+Arrays.toString(Arrays.copyOf(roots, n)), expected.length, n);
         for (int i=0 ; i<n ; ++i) {
             assertEquals(expected[i], roots[i], 1e-9);
         }
@@ -191,7 +191,7 @@ public class PolynomialsTest extends TestCase {
 
     public void testRandomQuartic() throws Exception {
         final Random rng = new Random(1);
-        for (int i=0 ; i<1000 ; ++i) {
+        for (int i=0 ; i<100000 ; ++i) {
             double a = (rng.nextDouble() - 0.5) * 100;
             if (Math.abs(a) < 2.0)
                 continue;
@@ -200,14 +200,14 @@ public class PolynomialsTest extends TestCase {
             double d = (rng.nextDouble() - 0.5) * 100;
             double e = (rng.nextDouble() - 0.5) * 100;
             double[] roots = new double[4];
-            int n = Polynomials.solve(roots, a, b, c, d, e);
+            final int n = Polynomials.solve(roots, a, b, c, d, e);
             for (int j=0 ; j<n ; ++j) {
-                double x = roots[j];
-                double x2 = x*x;
+                final double x = roots[j];
+                final double x2 = x*x;
                 assertEquals(
                     "random #"+i+": "+a+","+b+","+c+","+d+","+e,
                     // a+"x^4 + "+b+"x^3 + "+c+"x^2 + "+d+"x + "+e,
-                    0.0, a*x2*x2 + b*x2*x + c*x2 + d*x + e, 1e-7);
+                    0.0, a*x2*x2 + b*x2*x + c*x2 + d*x + e, 1e-9);
             }
         }
     }

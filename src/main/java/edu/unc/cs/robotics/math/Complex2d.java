@@ -135,26 +135,26 @@ public class Complex2d implements Serializable, Cloneable {
     /**
      * Computes complex division, and stores result in this.
      *
-     * @param rNum real component of numerator
-     * @param iNum imaginary component of numerator
-     * @param rDen real component of denominator
-     * @param iDen imaginary component of denominator
+     * @param numReal real component of numerator
+     * @param numImaginary imaginary component of numerator
+     * @param denReal real component of denominator
+     * @param denImaginary imaginary component of denominator
      * @return {@code this}
      */
     public Complex2d div(
-        double rNum, double iNum,
-        double rDen, double iDen)
+        double numReal, double numImaginary,
+        double denReal, double denImaginary)
     {
-        if (Math.abs(rDen) < Math.abs(iDen)) {
-            double q = rDen/iDen;
-            double den = rDen*q + iDen;
-            this.real = (rNum * q + iNum) / den;
-            this.imaginary = (iNum * q - rNum) / den;
+        if (Math.abs(denReal) < Math.abs(denImaginary)) {
+            final double q = denReal/denImaginary;
+            final double den = denReal*q + denImaginary;
+            this.real = (numReal*q + numImaginary)/den;
+            this.imaginary = (numImaginary*q - numReal)/den;
         } else {
-            double q = iDen/rDen;
-            double den = iDen*q + rDen;
-            this.real = (iNum*q + rNum)/den;
-            this.imaginary = (iNum - rNum*q)/den;
+            final double q = denImaginary/denReal;
+            final double den = denImaginary*q + denReal;
+            this.real = (numImaginary*q + numReal)/den;
+            this.imaginary = (numImaginary - numReal*q)/den;
         }
 
         return this;
@@ -170,13 +170,13 @@ public class Complex2d implements Serializable, Cloneable {
             this.real = 0.0;
             this.imaginary = 0.0;
         } else {
-            double t = Math.sqrt((Math.abs(real) + abs(real, imaginary))/2.0);
+            final double t = Math.sqrt((Math.abs(real) + abs(real, imaginary))/2.0);
             if (real >= 0.0) {
                 this.real = t;
-                this.imaginary = imaginary / (2.0 * t);
+                this.imaginary = imaginary/(2.0*t);
             } else {
-                this.real = Math.abs(imaginary) / (2.0 * t);
-                this.imaginary = Math.copySign(1.0, imaginary) * t;
+                this.real = Math.abs(imaginary)/(2.0*t);
+                this.imaginary = Math.copySign(1.0, imaginary)*t;
             }
         }
         return this;
@@ -191,7 +191,10 @@ public class Complex2d implements Serializable, Cloneable {
     }
 
     public Complex2d[] cbrt() {
-        final double absCbrt = Math.cbrt(abs());
+        // the next line should probably be a Math.cbrt(),
+        // but pow seems faster and is oddly more accurate in my test
+        // case.  And we don't need to handle cbrt of a negative.
+        final double absCbrt = Math.pow(abs(), 1.0/3.0);
         final double nthPhi = arg()/3.0;
         final double slice = 2.0 * Math.PI / 3.0;
         final Complex2d[] result = new Complex2d[3];

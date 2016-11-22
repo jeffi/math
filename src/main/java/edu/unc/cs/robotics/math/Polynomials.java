@@ -7,12 +7,16 @@ import static java.lang.Math.sqrt;
  * Polynomial solver
  */
 public class Polynomials {
-    private static final double EPSILON = Math.ulp(1.0);
+    private static final double EPSILON = 1e-15; // Math.ulp(1.0);
 
     private Polynomials() {}
 
     private static boolean isZero(double x) {
         return Math.abs(x) <= EPSILON;
+    }
+
+    private static Complex2d R(double v) {
+        return new Complex2d(v);
     }
 
     /**
@@ -39,99 +43,86 @@ public class Polynomials {
 //        d /= a;
 //        e /= a;
 
-        final double p = (8.0 * a*c - 3.0 * b*b) / (8.0 *a*a);
-        final double q = (b*b*b - 4.0*a*b*c + 8.0*a*a*d) / (8.0*a*a*a);
+//        final double p = (8.0 * a*c - 3.0 * b*b) / (8.0 *a*a);
+//        final double q = (b*b*b - 4.0*a*b*c + 8.0*a*a*d) / (8.0*a*a*a);
+        final double d1 = 2.0*c*c*c - 9.0*b*c*d + 27.0*a*d*d + 27.0*b*b*e - 72.0*a*c*e;
         final double d0 = c*c - 3.0*b*d + 12.0*a*e;
-        final double d1 = 2.0*c*c*c - 9.0*b*c*d + 27.0*b*b*e + 27.0*a*d*d - 72.0*a*c*e;
-        final double de = (d1*d1 - 4.0*d0*d0*d0)/-27.0; // discriminant
-//        System.out.println("p = "+p);
-//        System.out.println("q = "+q);
-//        System.out.println("d0 = "+d0);
-//        System.out.println("d1 = "+d1);
-//        System.out.println("de = "+de);
-        Complex2d[] Qi = new Complex2d(d1*d1 - 4.0*d0*d0*d0).sqrt().add(d1).div(2.0).cbrt();
-//        System.out.println("Qi = " + Arrays.toString(Qi));
-        //System.out.println("Qq = "+ Qq);
-//        final double Q = Math.cbrt((d1 + Math.sqrt(d1*d1 - 4.0*d0*d0*d0))*0.5);
-//        System.out.println("Q = "+Q);
-        Complex2d[] Si = new Complex2d[3];
-        for (int i=0 ; i<3 ; ++i) {
-            final Complex2d qt = Qi[i];
-            Si[i] = qt.clone().add(new Complex2d(d0).div(qt)).div(3.0*a).add(-2.0/3.0*p).sqrt().div(2.0);
-//            System.out.println("Sq["+i+"] = "+Qq.get(i).add(new Complex(d0).divide(Qq.get(i))).divide(3.0*a).add(-2.0/3.0 * p).sqrt().divide(2.0));
-        }
-//        System.out.println("Si = "+Arrays.toString(Si));
-//        double S = Math.sqrt((-2.0/3.0)*p + (Q + d0/Q)/(3.0*a)) * 0.5;
-//        System.out.println("S = "+S);
-        // TODO: if S == 0 or Q == 0, see special cases of formula
+        final double desc = d1*d1 - 4.0*d0*d0*d0; // discriminant * -27
+        final double P = 8*a*c - 3*b*b;
 
+        final double D = 64.0*a*a*a*e - 16.0*a*a*c*c + 16.0*a*b*b*c - 16.0*a*a*b*d - 3*b*b*b*b;
+        final double Q = b*b*b - 4*a*b*c + 8*d*a*a;
 
-//        if (de > 0.0) {
-//            // When discriminant > 0, then Q is a non-real complex number.
-//            // We can compute S using the following formula:
-//
-//            double phi = Math.acos(d1 / (2.0*Math.sqrt(d0*d0*d0)));
-//            S = Math.sqrt(-2.0/3.0*p + 2.0/3.0*Math.sqrt(d0)*Math.cos(phi/3)/a) / 2.0;
-//            System.out.println(S);
-//        }
-
-        if (de == 0.0) {
-            // iff discriminant is 0, the polynomial has a multiple root
-
-            final double D = 64.0*e - 16.0*c*c + 16.0*b*b*c - 16.0*b*d - 3.0*b*b*b*b;
-            if (D == 0) {
-                if (p < 0.0) {
-                    throw new AssertionError("TODO");
-                } else if (p > 0.0 && q == 0.0) {
-                    throw new AssertionError("TODO");
-                } else {
-                    assert d0 == 0;
-                    roots[0] = b/-4.0;
+//        System.out.println(desc);
+        if (isZero(desc)) {
+//            if (P < 0 && D < 0 && !isZero(d0)) {
+//                System.out.println("CASE 3a: real double, 2 real simple");
+//            } else if (D > 0 || (P > 0 && (D != 0 || Q != 0))) {
+//                System.out.println("CASE 3b: real double, 2 complex");
+//            } else if (d0 == 0 && D != 0) {
+//                System.out.println("CASE 3c: triple root, 1 simple");
+//            } else
+            if (isZero(D)) {
+                if (isZero(d0)) {
+//                    System.out.println("CASE 3f: 4 roots -b/4a");
+                    roots[0] = -b/(4.0*a);
                     return 1;
+//                } else if (P < 0) {
+//                    System.out.println("CASE 3d: 2 real double roots");
+//                } else if (P > 0 && Q == 0.0) {
+//                    System.out.println("CASE 3e: 2 complex double roots");
+//                } else {
+//                    System.out.println("CASE 3?: ???");
                 }
             }
-
+//        } else if (desc < 0) {
+//            System.out.println("CASE 1: 2 real, 2 complex");
+//        } else { // desc > 0
+//            if (P < 0 || D < 0) {
+//                System.out.println("CASE 2a: 4 distinct real roots");
+//            } else {
+//                System.out.println("CASE 2b: 2 pairs of non-real");
+//            }
         }
 
-        int n = 0;
-        for (int i=0 ; i<3 ; ++i) {
-//            if (Math.abs(Si[i].imaginary) < Math.ulp(Si[i].real))
-//                S = Si[i].real;
+        Complex2d[] Qs = new Complex2d(desc).sqrt().add(d1).div(2.0).cbrt();
 
-            Complex2d St = Si[i];
-            n = 0;
-            for (int r=0 ; r<4 ; ++r) {
-                Complex2d op = new Complex2d(b/(-4.0*a));
-                Complex2d rt = new Complex2d(-4).mul(St).mul(St).sub(2*p);
-                if ((r & 2) == 0) {
-                    op.sub(St);
-                    rt.add(new Complex2d(q).div(St));
-                } else {
-                    op.add(St);
-                    rt.sub(new Complex2d(q).div(St));
-                }
-                rt = rt.sqrt().div(2.0);
-                if ((r&1) == 0) {
-                    op = op.add(rt);
-                } else {
-                    op = op.sub(rt);
-                }
+        Complex2d q = Qs[2];
+        Complex2d p3 = R(d0).div(q.clone().mul(3*a) ).add(q.clone().div(3.0*a));
+        double v = P/(-12.0*a*a);
+        double w = (Q)/(-4*a*a*a);
 
-                if (Math.abs(op.imaginary) < EPSILON) {
-                    roots[n++] = op.real;
-                }
-//                System.out.println(i+"["+r+"]: "+op);
+        Complex2d p4 = p3.clone().add(v).sqrt();
+        Complex2d p5 = R(v*2).sub(p3);
+        Complex2d p6 = R(w).div(p4);
+        p4.div(2);
+
+
+        Complex2d r0 = R(b/(-4*a)).sub(p4).sub(p5.clone().sub(p6).sqrt().div(2));
+        Complex2d r1 = R(b/(-4*a)).sub(p4).add(p5.clone().sub(p6).sqrt().div(2));
+        Complex2d r2 = R(b/(-4*a)).add(p4).sub(p5.clone().add(p6).sqrt().div(2));
+        Complex2d r3 = R(b/(-4*a)).add(p4).add(p5.clone().add(p6).sqrt().div(2));
+
+
+            int n = 0;
+            if (isZero(r0.imaginary)) {
+                roots[n++] = r0.real;
+            }
+            if (isZero(r1.imaginary)) {
+                roots[n++] = r1.real;
+            }
+            if (isZero(r2.imaginary)) {
+                roots[n++] = r2.real;
+            }
+            if (isZero(r3.imaginary)) {
+                roots[n++] = r3.real;
             }
 
-            if (n > 0) {
-                break;
-            }
-        }
 
         // remove duplicates
         for (int i=0 ; i<n ; ++i) {
             for (int j=i+1 ; j<n ; ) {
-                if (Math.abs(roots[i] - roots[j]) < EPSILON) {
+                if (Math.abs(roots[i] - roots[j]) < EPSILON*4) {
                     roots[j] = roots[--n];
 //                    System.out.println("removed duplicate root: "+roots[i]);
                 } else {
