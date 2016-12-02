@@ -32,12 +32,21 @@ public class NewtonSolver {
     public double solve(double initialGuess, Fn fn) {
         double x1 = initialGuess, x0;
         double[] y = new double[2];
-        for (int i=0 ; i<_iterationLimit ; ++i) {
+        for (int i=0, limit=_iterationLimit ; i<limit ; ++i) {
             fn.compute(y, x0 = x1);
+            if (Double.isNaN(y[0])) {
+                throw new IllegalStateException("value at "+x0+" is NaN");
+            }
+            if (Double.isNaN(y[1])) {
+                throw new IllegalStateException("derivative at "+x0+" is NaN");
+            }
+            if (y[1] == 0.0) {
+                throw new ConvergenceException("derivative at "+x0+" is 0.0", x0);
+            }
             if (Math.abs((x1 = x0 - y[0]/y[1]) - x0) < _epsilon) {
                 return x1;
             }
         }
-        throw new ConvergenceException(x1);
+        throw new ConvergenceException("iteration limit reached", x1);
     }
 }

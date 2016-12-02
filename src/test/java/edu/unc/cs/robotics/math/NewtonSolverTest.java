@@ -50,4 +50,29 @@ public class NewtonSolverTest extends TestCase {
             assertEquals(25, evaluations.get());
         }
     }
+
+    public void testBadEval() throws Exception {
+        try {
+            NewtonSolver solver = new NewtonSolver();
+            solver.solve(0.0, (y, x) -> {
+                y[0] = 1;
+                y[1] = Double.NaN;
+            });
+            fail("expected an exception due to the NaN");
+        } catch (IllegalStateException ex) {
+            // expected
+        }
+
+        try {
+            NewtonSolver solver = new NewtonSolver();
+            solver.solve(0.0, (y, x) -> {
+                y[0] = Double.NaN;
+                y[1] = 1;
+            });
+            fail("expected an exception due to the NaN");
+        } catch (IllegalStateException ex) {
+            // expected
+        }
+
+    }
 }

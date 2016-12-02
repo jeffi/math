@@ -7,7 +7,8 @@ public class ConvergenceException extends RuntimeException {
 
     private final double _value;
 
-    public ConvergenceException(double value) {
+    public ConvergenceException(String message, double value) {
+        super(message);
         _value = value;
     }
 
