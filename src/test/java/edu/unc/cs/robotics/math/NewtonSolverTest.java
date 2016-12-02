@@ -75,4 +75,22 @@ public class NewtonSolverTest extends TestCase {
         }
 
     }
+
+    public void testTolerance() throws Exception {
+        // before switching to the "tolerance" metric
+        // this test would fail because the large value of the
+        // result could never be with 1e-9 of the actual solution.
+
+        NewtonSolver solver = new NewtonSolver()
+            .iterationLimit(75)
+            .tolerance(1e-9); // 9 digits of accuracy required
+
+        final double X = 1.23456e+30;
+        double result = solver.solve(10.0, (y, x) -> {
+            y[0] = x*x - X;
+            y[1] = 2*x;
+        });
+
+        assertEquals(Math.sqrt(X), result, 1);
+    }
 }

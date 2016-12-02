@@ -16,15 +16,50 @@ public class NewtonSolver {
         void compute(double[] y, double x);
     }
 
-    private double _epsilon = 1e-9;
+    private double _tolerance = 1e-9;
     private int _iterationLimit = 50;
 
-    public NewtonSolver epsilon(double epsilon) {
-        _epsilon = epsilon;
+    /**
+     * Specifies the difference tolerance.  Specify this as 1e-# where # is the
+     * number of digits of accuracy desired.  The default is 1e-9 for 9 digits
+     * of accuracy.
+     *
+     * @param epsilon the tolerance required in the result
+     * @return {@code this}
+     * @throws IllegalArgumentException if argument is less than 0 or greater than 0.1
+     */
+    public NewtonSolver tolerance(double epsilon) {
+        if (epsilon < 0.0 || epsilon >= 1e-1) {
+            throw new IllegalArgumentException("tolerance must be between 0 and 0.1");
+        }
+        _tolerance = epsilon;
         return this;
     }
 
+    /**
+     * Specifies the tolerance.
+     *
+     * @param epsilon the tolerance
+     * @return {@code this}
+     * @deprecated use {@link #tolerance(double)} instead.
+     */
+    @Deprecated
+    public NewtonSolver epsilon(double epsilon) {
+        return tolerance(epsilon);
+    }
+
+    /**
+     * Specifies the number of iterations to compute before giving up and throwing
+     * a {@link ConvergenceException}.
+     *
+     * @param limit the iteration limit.
+     * @return {@code this}
+     * @throws IllegalArgumentException if limit is not at least 1
+     */
     public NewtonSolver iterationLimit(int limit) {
+        if (limit < 1) {
+            throw new IllegalArgumentException("iteration limit must be at least 1");
+        }
         _iterationLimit = limit;
         return this;
     }
@@ -43,7 +78,8 @@ public class NewtonSolver {
             if (y[1] == 0.0) {
                 throw new ConvergenceException("derivative at "+x0+" is 0.0", x0);
             }
-            if (Math.abs((x1 = x0 - y[0]/y[1]) - x0) < _epsilon) {
+            x1 = x0 - y[0]/y[1];
+            if (Math.abs(x1 - x0) < Math.abs(x1)*_tolerance) {
                 return x1;
             }
         }
