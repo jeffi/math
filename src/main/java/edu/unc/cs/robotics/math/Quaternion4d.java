@@ -344,7 +344,7 @@ public final class Quaternion4d implements DoubleVector, Cloneable {
 
     public static double arcLength(Quaternion4d q, Quaternion4d p) {
         final double dot = Math.abs(q.w * p.w + q.x * p.x + q.y * p.y + q.z * p.z);
-        return dot > (1.0 - MAX_NORM_ERROR) ? 0.0 : Math.acos(dot);
+        return dot <= (1.0 - MAX_NORM_ERROR) ? 2.0 * Math.acos(dot) : 0.0;
     }
 
     @Override

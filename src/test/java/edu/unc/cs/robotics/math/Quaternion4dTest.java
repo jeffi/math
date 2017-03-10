@@ -170,6 +170,16 @@ public class Quaternion4dTest extends TestCase {
 
     }
 
+    public void testArcLength() throws Exception {
+        Quaternion4d q = new Quaternion4d(0.0, 1.0, 0.0, 0.0);
+        Quaternion4d p = new Quaternion4d(0.0, 0.0, 0.0, 1.0);
+        assertEquals(Math.PI, Quaternion4d.arcLength(p, q), EPSILON);
+
+        q.fromAxisAngle(1.0, 2.0, 3.0, 90 * Math.PI / 180);
+        p.fromAxisAngle(1.0, 2.0, 3.0, -20 * Math.PI / 180);
+        assertEquals(90 + 20, Quaternion4d.arcLength(p, q) * 180 / Math.PI, EPSILON);
+    }
+
     public void testRandom() throws Exception {
         final int N = 1000;
         Random rand = new Random(1);

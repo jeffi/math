@@ -20,7 +20,7 @@ s/([A-Z][A-Za-z0-8]*[234X])d/\1f/g
 s/FloatFunction/DoubleFunction/g
 s/([a-z]\.apply)/(float)\1/g
 
-# These math members are doubles, we need to cast (not abs() is missing from this list)
+# These math members are doubles, we need to cast (note that abs() is missing from this list)
 s/Math\.sqrt/(float)Math.sqrt/g
 s/Math\.cos/(float)Math.cos/g
 s/Math\.sin/(float)Math.sin/g

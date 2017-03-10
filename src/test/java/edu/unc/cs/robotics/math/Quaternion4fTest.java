@@ -171,6 +171,16 @@ public class Quaternion4fTest extends TestCase {
 
     }
 
+    public void testArcLength() throws Exception {
+        Quaternion4f q = new Quaternion4f(0.0f, 1.0f, 0.0f, 0.0f);
+        Quaternion4f p = new Quaternion4f(0.0f, 0.0f, 0.0f, 1.0f);
+        assertEquals((float)Math.PI, Quaternion4f.arcLength(p, q), EPSILON);
+
+        q.fromAxisAngle(1.0f, 2.0f, 3.0f, 90 * (float)Math.PI / 180);
+        p.fromAxisAngle(1.0f, 2.0f, 3.0f, -20 * (float)Math.PI / 180);
+        assertEquals(90 + 20, Quaternion4f.arcLength(p, q) * 180 / (float)Math.PI, EPSILON);
+    }
+
     public void testRandom() throws Exception {
         final int N = 1000;
         Random rand = new Random(1);
